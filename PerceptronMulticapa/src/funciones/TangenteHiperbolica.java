@@ -10,14 +10,12 @@ public class TangenteHiperbolica implements Funciones {
 
     @Override
     public double evaluar(double valor) {
-        // HACER
-        return -1;
+        return Math.tanh(valor);
     }
 
     @Override
     public double evaluarDerivada(double valor) {
-        // HACER
-        return -1;
+        return 1 - Math.pow(Math.tanh(valor), 2);
     }
     
 }

@@ -1,5 +1,6 @@
 package tests;
 
+import funciones.TangenteHiperbolica;
 import redNeuronal.Perceptron;
 
 /**

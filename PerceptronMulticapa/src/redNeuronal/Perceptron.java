@@ -1,6 +1,6 @@
 package redNeuronal;
 
-import funciones.Sigmoide;
+import funciones.*;
 import java.io.File;
 
 /**
@@ -194,7 +194,7 @@ public class Perceptron {
      * Su uso es estático por lo que puede ser usado incluso sin haber instanciado la variable
      * 
      * @param path Fichero de entrada
-     * @return 
+     * @return El perceptrón cargado desde memoria
      * 
      */
     public static Perceptron load(String path) {
@@ -218,7 +218,7 @@ public class Perceptron {
     /**
      * Devuelve el rate de aprendizaje.
      */
-    public double getLearningRate() {
+    public double getRateAprendizaje() {
         return rateAprendizaje;
     }
 
@@ -226,7 +226,7 @@ public class Perceptron {
      * Asigna el rate de aprendizaje. Un valor más alto hará que "aprenda" más rápido pero con más errores.
      * Contra más bajo sea más tardará en llegar al valor óptimo, pero será más exacto.
      */
-    public void setLearningRate(double rate) {
+    public void setRateAprendizaje(double rate) {
         rateAprendizaje = rate;
     }
 
@@ -253,23 +253,23 @@ public class Perceptron {
     }
 
     /**
-     * Devuelve el número de capas que tiene
+     * Devuelve el número de capas que tiene el perceptrón
      */
-    public int getLayerCount() {
+    public int getCapaLength() {
         return capas.length;
     }
 
     /**
-     * Devuelve el tamaño de cualquier punto de la red neuronal
+     * Devuelve la cantidad de neuronas que tiene una capa
      */
-    public int getLayerSize(int index) {
-        return capas[index].getLength();
+    public int getCantidadNeuronasDesdeCapa(int capa) {
+        return capas[capa].getLength();
     }
 
     /**
      * Devuelve una neurona a partir de una capa y un índice.
      */
-    public Neurona getNeuronaFromLayer(int layer, int index) {
-        return capas[layer].getNeurona(index);
+    public Neurona getNeuronaDesdeCapa(int capa, int index) {
+        return capas[capa].getNeurona(index);
     }
 }
