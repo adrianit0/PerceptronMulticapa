@@ -1,5 +1,6 @@
 package redNeuronal;
 
+import excepciones.*;
 import funciones.*;
 import java.io.File;
 
@@ -58,11 +59,35 @@ public class Perceptron {
             }
         }
     }
+    
+    /**
+    * Crea un perceptrón con valores de entradas predeterminadas:
+    *  - Capas: {2, 2, 1}
+    *  - Valor de aprendizaje: 0.6
+    *  - Función de transferencia: Sigmoide
+    */
+    public Perceptron() {
+        this.rateAprendizaje = 0.6;
+        this.funcionTransferencia = new Sigmoide();
+        
+        int[] capasPorDefecto = new int[] { 2, 2, 1};
+
+        this.capas = new Capa[capasPorDefecto.length];
+
+        for (int i = 0; i < capasPorDefecto.length; i++) {
+            if (i != 0) {
+                this.capas[i] = new Capa(capasPorDefecto[i], capasPorDefecto[i - 1]);
+            } else {
+                this.capas[i] = new Capa(capasPorDefecto[i], 0);
+            }
+        }
+    }
 
     /**
      * Ejecuta la red neuronal dando unos valores de entradas.
      * 
      * @param input El input, su tamaño debe coincidir con el valor inicial de entradas dadas.
+     * @throws excepciones.IncorrectInputSize
      * 
      */
     public double[] Ejecutar(double[] input) {
@@ -72,7 +97,12 @@ public class Perceptron {
         double[] output = new double[capas[capas.length - 1].getLength()];
 
         // Introduce los inputs
-        for (i = 0; i < capas[0].getLength(); i++) {
+        int tam = capas[0].getLength();
+        
+        if (tam!=input.length) 
+            throw new IncorrectInputSize();
+            
+        for (i = 0; i < tam; i++) {
             capas[0].getNeurona(i).setValor(input[i]);
         }
 
@@ -115,9 +145,16 @@ public class Perceptron {
      * @param input El valor de entrada para un suceso
      * @param output El valor de salida deseada para los inputs dados
      * @return El error medio resultante de la propagación. 
+     * @throws excepciones.IncorrectInputSize Cuando pones un length del input diferente al del perceptrón
+     * @throws excepciones.IncorrectOutputSize Cuando pones un length del output diferente al del perceptrón
      * 
      */
     public double backPropagation(double[] input, double[] output) {
+        if (capas[0].getLength()!=input.length) 
+            throw new IncorrectInputSize();
+        else if (capas[capas.length-1].getLength()!=output.length)
+            throw new IncorrectOutputSize();
+        
         double[] nOutput = Ejecutar(input);
         double error;
         int i,j,k;
@@ -178,7 +215,7 @@ public class Perceptron {
         }
         try {
             // TODO: Almacenar el perceptrón
-            return false;
+            throw new NotImplementedYed("No implementado aún");
         } catch (Exception e) {
             System.err.println("ERROR: " + e.getMessage());
             return false;
@@ -197,21 +234,20 @@ public class Perceptron {
      * @return El perceptrón cargado desde memoria
      * 
      */
-    public static Perceptron load(String path) {
+    public static Perceptron load(String path) throws PerceptronNotFoundException {
         //Si no existe ningun archivo en la ruta ignora la petición de carga.
         File f = new File(path);
-        if (f.exists()) {
+        if (!f.exists()) {
             System.out.println("El archivo " + f.getName() + " no existe");
-            return null;
+            throw new PerceptronNotFoundException("No se ha encontrado el perceptrón en la ruta "+ path);
         }
 
         try {
-
             // TODO: Cargar el contenido del perceptrón
-            return null;
+            throw new NotImplementedYed("No implementado aún");
         } catch (Exception e) {
             System.err.println("ERROR: " + e.getMessage());
-            return null;
+            throw new PerceptronNotFoundException("Error al cargar el perceptrón: " + e);
         }
     }
 
