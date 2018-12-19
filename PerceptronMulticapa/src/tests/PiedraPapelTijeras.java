@@ -5,6 +5,8 @@
  */
 package tests;
 
+import funciones.*;
+import java.util.Calendar;
 import redNeuronal.Perceptron;
 
 /**
@@ -92,7 +94,7 @@ public class PiedraPapelTijeras {
     public void start() {
         int[] capas = new int[]{5, 5, 5, 3};
 
-        net = new Perceptron(capas);
+        net = new Perceptron(capas, 0.3, new Sigmoide());
 
         /* Aprendiendo */
         ESTADO[] estados = ESTADO.values();

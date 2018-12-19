@@ -14,16 +14,32 @@ package redNeuronal;
 public class Capa {
 
     private Neurona[] neuronas;
-
-    /**
-     * Capa de la neurona
-     *
+    
+    /***
+     * Crea una nueva capa limpia, es decir, sin ninguna conexión.
+     * 
+     * No se recomienda usarse si no sabe unir los enlaces correctamente.
      */
-    public Capa(int l, int prev) {
+    public Capa (int l) {
         neuronas = new Neurona[l];
 
         for (int j = 0; j < l; j++) {
-            neuronas[j] = new Neurona(prev);
+            neuronas[j] = new Neurona();
+        }
+    }
+
+    /**
+     * Capa de la neurona
+     * 
+     * @param tam numero de neuronas que tendrá esta neurona
+     * @param capaAnterior capa anterior a este
+     *
+     */
+    public Capa(int tam, Capa capaAnterior) {
+        neuronas = new Neurona[tam];
+
+        for (int j = 0; j < tam; j++) {
+            neuronas[j] = new Neurona(capaAnterior.neuronas);
         }
     }
 
@@ -33,5 +49,9 @@ public class Capa {
 
     public Neurona getNeurona(int index) {
         return neuronas[index];
+    }
+     
+    protected Neurona[] getNeuronas() {
+        return neuronas;
     }
 }
