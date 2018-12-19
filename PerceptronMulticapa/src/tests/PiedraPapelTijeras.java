@@ -50,12 +50,12 @@ public class PiedraPapelTijeras {
         
         public double[] getValor (int v) {
             switch (v) {
-                case 2:
-                    return new double[]{0,0,0,0,1};
-                case 1:
-                    return new double[]{0,0,1,1,1};
                 case 0:
                     return new double[]{1,1,1,1,1};
+                case 1:
+                    return new double[]{0,0,1,1,1};
+                case 2:
+                    return new double[]{0,0,0,0,1};
                 default:
                     return new double[]{0,0,0,0,0};
             }
@@ -90,7 +90,7 @@ public class PiedraPapelTijeras {
     }
 
     public void start() {
-        int[] capas = new int[]{5, 7, 7, 3};
+        int[] capas = new int[]{5, 5, 5, 3};
 
         net = new Perceptron(capas);
 
