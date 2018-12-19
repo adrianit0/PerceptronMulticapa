@@ -153,7 +153,7 @@ public class Perceptron {
         if (capas[0].getLength()!=input.length) 
             throw new IncorrectInputSize();
         else if (capas[capas.length-1].getLength()!=output.length)
-            throw new IncorrectOutputSize();
+            throw new IncorrectOutputSize("Número incorrecto de output: tuSize:"+output.length+" correctsize:"+capas[capas.length-1].getLength());
         
         double[] nOutput = Ejecutar(input);
         double error;

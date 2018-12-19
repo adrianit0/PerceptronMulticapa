@@ -9,7 +9,7 @@ import redNeuronal.Perceptron;
 
 /**
  *
- * Test de OR: A partir de X iteracciones (Por defecto: 10000), la red neuronal
+ * Test de XOR: A partir de X iteracciones (Por defecto: 10000), la red neuronal
  * debe aprender como funciona una puerta lógica OR. Usará 2 inputs, 1 capa
  * oculta con 2 neuronas y un output
  *
@@ -37,7 +37,7 @@ public class TestXOR {
         int[] capas = new int[]{6, 8, 1};
 
         net = new Perceptron(capas);
-
+        
         /* Aprendiendo */
         for (int i = 0; i < iteracciones; i++) {
             double x1 = Math.round(Math.random());
@@ -73,12 +73,14 @@ public class TestXOR {
 
         System.out.println("APRENDIZAJE PARA TEST XOR COMPLETADO:");
 
+        
+        test (new double [] { 1, 1});
 
         /* Test */
-        test(new double[]{0, 0});
+        /*test(new double[]{0, 0});
         test(new double[]{0, 1});
         test(new double[]{1, 0});
-        test(new double[]{1, 1});
+        test(new double[]{1, 1});*/
     }
 
     private double nand(double x1, double x2) {
@@ -103,7 +105,7 @@ public class TestXOR {
         inputs = new double[]{x1, x2, nand1, nand2, nand3, nand4};
 
         double[] output = net.Ejecutar(inputs);
-
+        
         System.out.println(inputs[0] + " xor " + inputs[1] + " = " + Math.round(output[0]));
     }
 }
