@@ -5,7 +5,7 @@
  */
 package builder;
 
-import excepciones.NotImplementedYed;
+import excepciones.NotImplementedException;
 import java.io.File;
 import redNeuronal.Funciones;
 import redNeuronal.Perceptron;
@@ -48,7 +48,7 @@ public class PerceptronBuilder {
          * Carga un perceptrón almacenado en memoria
          */
         public PerceptronBuilding fromFile (File file) {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         /**
@@ -56,21 +56,21 @@ public class PerceptronBuilder {
          * que construyes el perceptrón.
          */
         public PerceptronBuilding exportSchema (File file) {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         /**
          * Permite cargar un proyecto de construcción de perceptrón.
          */
         public PerceptronBuilding importSchema (File file) {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         /**
          * Cargas  un perceptrón a partir de otro.
          */
         public PerceptronBuilding clonePerceptron (Perceptron p) {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         /**
@@ -95,7 +95,7 @@ public class PerceptronBuilder {
          * @param input2 El input 2
          */
         public PerceptronBuilding setXORCompatibility (int input1, int input2) {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         /**
@@ -107,7 +107,7 @@ public class PerceptronBuilder {
          * 
          */
         public PerceptronBuilding removeXORCompatibily () {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         
@@ -115,7 +115,7 @@ public class PerceptronBuilder {
          * Pones nuevas capas
          */
         public PerceptronBuilding setCapas (int[] capas) {
-            throw new NotImplementedYed("No implementado aún");
+            throw new NotImplementedException("No implementado aún");
         }
         
         /**

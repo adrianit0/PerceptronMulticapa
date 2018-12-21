@@ -6,21 +6,33 @@
 package redNeuronal;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  *
  * @author Adrián 
  */
 public class Neurona {
-    // Valor actual de la neurona
-    // Se pone en el input y se toma del output
+    /**
+     * Valor actual de la neurona.
+     * Es el valor que se le da al input, va pasando por todas las capas y llega hasta el output.
+     */
     private double valorActual;
     
-    // Enlaces: Valor por cada ramificación entrante de las neuronas anteriores a esta neurona.
-    // Modificación: Ahora la selección de neuronas es especifica en vez de general.
-    // En terminos de consumo de memoria y coste ciclomático ahora es mayor, pero ofrece
-    // una ventaja que antes no tenia, y es la selección de enlaces en las neuronas.
-    private HashMap<Neurona, Double> enlaces; 
+    /**
+     * Enlaces entrantes de la otras neuronas a esta.
+     * 
+     * Aparte de la neurona de entrada, tiene un valor por cada ramificación a esta neurona.
+     */
+    private HashMap<Neurona, Double> enlacesEntrantes; 
+    
+    /**
+     * Enlaces salientes de este neurona a otras neuronas.
+     * 
+     * Necesario para enseñarle al machine learning
+     */
+    private HashSet<Neurona> enlacesSalientes;
     
     // Umbral: Modifica el valor resultado o impone un límite que se debe sobrepasar antes de propagarse a otra neurona. 
     // Esta función se conoce como función de activación. 
@@ -38,32 +50,101 @@ public class Neurona {
     * Porque podría dar valores inconcluyentes al no tener ninguna conexión.
     */
     public Neurona () {
-        enlaces = new HashMap<>();
-        umbral = Math.random() / division;
-        delta = Math.random() / division;
-        valorActual = Math.random() / division;
-        
-        setPesos();
+        iniciarlizarValores();
+        setEnlaces();
     }
     
+    /**
+     * Crea una neurona con todas las conexiones a otras neuronas
+     */
     public Neurona(Neurona... neuronas) {
-        enlaces = new HashMap<>();
+        iniciarlizarValores();
+        setEnlaces(neuronas);
+    }
+    
+    private void iniciarlizarValores() {
+        enlacesEntrantes = new HashMap<>();
+        enlacesSalientes = new HashSet<>();
+        
         umbral = Math.random() / division;
         delta = Math.random() / division;
         valorActual = Math.random() / division;
-        
-        setPesos(neuronas);
     }
+    
+    /**
+     * Hace todos los calculos que tenga que hacer la neurona y lo devuelve.
+     * Esta manera hace más sencilla y facil de usar el perceptrón, reduciendo el código.
+     * 
+     * Lo que hace es coger todas las conexiones que tenga una neurona a todas las de capas anteriores
+     * y multiplicarlo por el valor del enlace.
+     * 
+     * Ejemplo:                             <br>
+     *                                      <br>
+     * (0.5) ---- 0.3 ---- \                <br>
+     *                                      <br>
+     * (0.3) ---- 0.8 -------(   )          <br>
+     *                                      <br>
+     * (0.1) ---- 0.1 ---- /                <br>
+     *                                      <br>
+     * 0.5*0.3=0.15                         <br>
+     * 0.3*0.8=0.24                         <br>
+     * 0.1*0.1=0.01                         <br>
+     *                                      <br>
+     * 0.15+0.24+0.01 = 0.40                <br>
+     * 
+     * @return El valor total de todos los calculos
+     * 
+     */
+    public double calcularValorEjecucion () {
+        double valor = 0;
+        for (Map.Entry<Neurona, Double> neurona : enlacesEntrantes.entrySet()){
+            valor += neurona.getValue() * neurona.getKey().getValor();
+        }
+        
+        return valor;
+    }
+    
+    public double calcularErrorBackPropagation () {
+        double error = 0;
+        for (Neurona neurona : enlacesSalientes) {
+            error += neurona.getDelta() * neurona.getEnlace(this);
+        }
+        
+        return error;
+    }
+    
+    public void calcularPesosBackPropagation (double rate) {
+        for (Neurona neurona : enlacesEntrantes.keySet()) {
+            aumentarPesoEnlace(neurona, rate * getDelta() * neurona.getValor());
+        }
+    }
+    
     public double getValor() {
         return valorActual;
     }
 
     public double getEnlace(Neurona index) {
-        return enlaces.get(index);
+        return enlacesEntrantes.get(index);
+    }
+    
+    public double[] getEnlaces () {
+        double[] _enlaces = new double [enlacesEntrantes.size()];
+        
+        int i = 0;
+        for (Double v : enlacesEntrantes.values()) {
+            _enlaces[i]=v;
+            i++;
+        }
+        
+        return _enlaces;
     }
 
     public int getLengthEnlace() {
-        return enlaces.size();
+        return enlacesEntrantes.size();
+    }
+    
+    public int getLengthEnlaceSalientes() {
+        return enlacesSalientes.size();
     }
 
     public double getUmbral () {
@@ -81,14 +162,13 @@ public class Neurona {
     /**
      * Crea un número limitado de enlaces.
      * 
-     * El número máximo de enlaces debe ser igual al número de neuronas que
-     * tiene la capa anterior, y su index debe ser [0, capaAnterior.length-1].
+     * Revisión: Ahora se puede incluir todos los enlaces a otras neuronas que quiera
+     * siempre y cuando esta neurona no esté en la misma capa o en una superior.
+     * 
      */
-    public void setPesos (Neurona... neuronas) {
-        enlaces = new HashMap<Neurona, Double>();
-        
+    public void setEnlaces (Neurona... neuronas) {
         for(Neurona n: neuronas)
-            enlaces.put(n, Math.random() / division);
+            addEnlace(n);
     }
     
     /**
@@ -97,22 +177,30 @@ public class Neurona {
      * Este enlace debe estar en la misma posición de una neurona existente en 
      * la capa anterior.
      * 
-     * La inicializa a un valor 0
+     * La inicializa a un valor cercano a 0
+     * 
+     * TO DO: Hacer la restricción para no poder añadir neuronas en la misma capa o en la superior
      */
-    public void setPeso (Neurona neurona) {
-        enlaces.put(neurona, Math.random() / division);
+    public void addEnlace (Neurona neurona) {
+        enlacesEntrantes.put(neurona, Math.random() / division);
+        // Añadimos el enlace saliente de esta neurona a la de destino
+        neurona.addEnlaceSaliente(this);
+    }
+    
+    private void addEnlaceSaliente (Neurona neurona) {
+        enlacesSalientes.add(neurona);
     }
     
     public boolean hasEnlace (int index) {
-        return enlaces.containsKey(index);
+        return enlacesEntrantes.containsKey(index);
     }
 
     public void setPesoEnlace(Neurona n, double valor) {
-        enlaces.replace(n, valor);
+        enlacesEntrantes.replace(n, valor);
     }
 
     public void aumentarPesoEnlace(Neurona n, double aumento) {
-        enlaces.replace(n, enlaces.get(n)+ aumento);
+        enlacesEntrantes.replace(n, enlacesEntrantes.get(n)+ aumento);
     }
 
     public void setUmbral(double valor) {

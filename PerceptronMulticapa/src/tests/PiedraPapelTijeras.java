@@ -8,6 +8,7 @@ package tests;
 import funciones.*;
 import java.util.Calendar;
 import redNeuronal.Perceptron;
+import util.Posicion;
 
 /**
 *
@@ -52,19 +53,6 @@ public class PiedraPapelTijeras {
         
         public double[] getValor (int v) {
             switch (v) {
-                case 0:
-                    return new double[]{1,1,1,1,1};
-                case 1:
-                    return new double[]{0,0,1,1,1};
-                case 2:
-                    return new double[]{0,0,0,0,1};
-                default:
-                    return new double[]{0,0,0,0,0};
-            }
-        }
-        
-        public double[] getValorOutput (int v) {
-            switch (v) {
                 case 2:
                     return new double[]{1,0,0};
                 case 1:
@@ -78,7 +66,7 @@ public class PiedraPapelTijeras {
     };
     
     private Perceptron net;
-    private int iteracciones = 10000;
+    private int iteracciones;
     
     // debuggearlo?
     private final boolean debug = false;
@@ -92,10 +80,21 @@ public class PiedraPapelTijeras {
     }
 
     public void start() {
-        int[] capas = new int[]{5, 5, 5, 3};
+        int[] capas = new int[]{3, 3, 3};
 
-        net = new Perceptron(capas, 0.3, new Sigmoide());
-
+        net = new Perceptron(capas, false);
+        
+        // 4ta capa
+        //net.addTodosLosEnlacesEnCapa(net.getCapaLength()-1);
+        // 3ra capa
+        net.addEnlaceToNeurona(new Posicion(2,0), new Posicion(0,0),new Posicion(1,0));
+        net.addEnlaceToNeurona(new Posicion(2,1), new Posicion(0,1),new Posicion(1,1));
+        net.addEnlaceToNeurona(new Posicion(2,2), new Posicion(0,2),new Posicion(1,2));
+        // 2da capa
+        net.addEnlaceToNeurona(new Posicion(1,0), new Posicion(0,1),new Posicion(0,2));
+        net.addEnlaceToNeurona(new Posicion(1,1), new Posicion(0,0),new Posicion(0,2));
+        net.addEnlaceToNeurona(new Posicion(1,2), new Posicion(0,0),new Posicion(0,1));
+        
         /* Aprendiendo */
         ESTADO[] estados = ESTADO.values();
         for (int i = 0; i < iteracciones; i++) {
@@ -105,7 +104,7 @@ public class PiedraPapelTijeras {
             ESTADO e = estados[value];
             
             double[] _inputs = e.getValor(e.getValor());
-            double[] _output = e.getValorOutput(e.getLose());
+            double[] _output = e.getValor(e.getLose());
             double error;
 
             // Si no cumple con la tabla devuelve 0, si cumple devolverá 1
@@ -120,9 +119,10 @@ public class PiedraPapelTijeras {
             }
         }
 
-        System.out.println("APRENDIZAJE PARA TEST AND COMPLETADO:");
+        System.out.println("APRENDIZAJE PARA TEST COMPLETADO:");
         
-
+        net.comprobarValores();
+        
         /* Test */
         System.out.println("TU MOV  = SU MOV");
         test(ESTADO.piedra);
@@ -139,7 +139,7 @@ public class PiedraPapelTijeras {
             output[i] = Math.round(output[i]);
         }
         
-        ESTADO x = getEstadoOutput(output);
+        ESTADO x = getEstado(output);
         
         if (x!=null)
             System.out.println(e.toString() + " = " + x.toString() + ": " + ((x.comprobar(e))?"Gana": "Pierde"));
@@ -148,21 +148,6 @@ public class PiedraPapelTijeras {
     }
     
     private ESTADO getEstado  (double[] e) {
-        if (e.length!=5) {
-            return null;
-        }
-        
-        if (e[0]==1)
-            return ESTADO.piedra;
-        else if (e[2]==1)
-            return ESTADO.papel;
-        else if (e[4]==1)
-            return ESTADO.tijeras;
-        
-        return null;
-    }
-    
-    private ESTADO getEstadoOutput  (double[] e) {
         if (e.length!=3) {
             return null;
         }

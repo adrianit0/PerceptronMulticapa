@@ -6,6 +6,7 @@
 package tests;
 
 import redNeuronal.Perceptron;
+import util.Posicion;
 
 /**
  *
@@ -13,20 +14,24 @@ import redNeuronal.Perceptron;
  * debe aprender como funciona una puerta lógica OR. Usará 2 inputs, 1 capa
  * oculta con 2 neuronas y un output
  *
- * Valores deseados de aprendizaje: 0 0 | 0 0 1 | 1 1 0 | 1 1 1 | 0
+ * Valores deseados de aprendizaje: 
+ * 0 0 | 0 
+ * 0 1 | 1 
+ * 1 0 | 1 
+ * 1 1 | 0
  *
  * @author Adrián
  */
 public class TestXOR {
 
     private Perceptron net;
-    private int iteracciones = 10000;
+    private int iteracciones;
 
     // debuggearlo?
     private final boolean debug = false;
 
     public TestXOR() {
-        this.iteracciones = 10000;
+        this.iteracciones = 100000;
     }
 
     public TestXOR(int iteracciones) {
@@ -34,23 +39,24 @@ public class TestXOR {
     }
 
     public void start() {
-        int[] capas = new int[]{6, 8, 1};
+        int[] capas = new int[]{2,1,2,1};
 
-        net = new Perceptron(capas);
+        net = new Perceptron(capas,false);
+        // Capa 3
+        net.addTodosLosEnlacesEnCapa(3);
+        // Capa 2
+        net.addEnlaceToNeurona(new Posicion(2,0), new Posicion(0,0),new Posicion(1,0));
+        net.addEnlaceToNeurona(new Posicion(2,1), new Posicion(0,1),new Posicion(1,0));
+        // Capa 1
+        net.addTodosLosEnlacesEnCapa(1);
+        
         
         /* Aprendiendo */
         for (int i = 0; i < iteracciones; i++) {
             double x1 = Math.round(Math.random());
             double x2 = Math.round(Math.random());
 
-            double nand1 = nand(x1, x2);
-
-            double nand2 = nand(x1, nand1);
-            double nand3 = nand(x2, nand1);
-
-            double nand4 = nand(nand2, nand3);
-
-            double[] _inputs = new double[]{x1, x2, nand1, nand2, nand3, nand4};
+            double[] _inputs = new double[]{x1, x2};
             double[] _output = new double[1];
             double error;
 
@@ -72,15 +78,12 @@ public class TestXOR {
         }
 
         System.out.println("APRENDIZAJE PARA TEST XOR COMPLETADO:");
-
         
-        test (new double [] { 1, 1});
-
         /* Test */
-        /*test(new double[]{0, 0});
+        test(new double[]{0, 0});
         test(new double[]{0, 1});
         test(new double[]{1, 0});
-        test(new double[]{1, 1});*/
+        test(new double[]{1, 1});
     }
 
     private double nand(double x1, double x2) {
@@ -95,17 +98,14 @@ public class TestXOR {
         double x1 = inputs[0];
         double x2 = inputs[1];
 
-        double nand1 = nand(x1, x2);
-
-        double nand2 = nand(x1, nand1);
-        double nand3 = nand(x2, nand1);
-
-        double nand4 = nand(nand2, nand3);
-
-        inputs = new double[]{x1, x2, nand1, nand2, nand3, nand4};
+        inputs = new double[]{x1, x2};
 
         double[] output = net.Ejecutar(inputs);
         
         System.out.println(inputs[0] + " xor " + inputs[1] + " = " + Math.round(output[0]));
+    }
+    
+    public static void main(String[] args) {
+        (new TestXOR()).start();
     }
 }

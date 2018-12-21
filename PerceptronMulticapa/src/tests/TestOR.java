@@ -24,7 +24,7 @@ import redNeuronal.Perceptron;
 */
 public class TestOR {
     private Perceptron net;
-    private int iteracciones = 10000;
+    private int iteracciones;
     
     // debuggearlo?
     private final boolean debug = false;
@@ -66,7 +66,7 @@ public class TestOR {
         }
 
         System.out.println("APRENDIZAJE PARA TEST OR COMPLETADO:");
-        
+        net.comprobarValores();
 
         /* Test */
         test(new double[]{0, 0});
@@ -79,5 +79,9 @@ public class TestOR {
         double[] output = net.Ejecutar(inputs);
 
         System.out.println(inputs[0] + " || " + inputs[1] + " = " + Math.round(output[0]));
+    }
+    
+    public static void main(String[] args) {
+        (new TestOR()).start();
     }
 }

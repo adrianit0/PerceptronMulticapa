@@ -7,18 +7,18 @@ package excepciones;
  * 
  * @author Adrián
  */
-public class NotImplementedYed extends RuntimeException {
-    public NotImplementedYed() {}
+public class NotImplementedException extends RuntimeException {
+    public NotImplementedException() {}
     
-    public NotImplementedYed(String e){
+    public NotImplementedException(String e){
         super (e);
     }
     
-    public NotImplementedYed(Throwable c) {
+    public NotImplementedException(Throwable c) {
         super (c);
     }
     
-    public NotImplementedYed(String e,Throwable c) {
+    public NotImplementedException(String e,Throwable c) {
         super (e,c);
     }
 }

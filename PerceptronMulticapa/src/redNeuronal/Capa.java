@@ -6,8 +6,8 @@ package redNeuronal;
  * 
  * Cada perceptrón está compuesto por 3 tipos de capas:
  *  - Inputs:       Es siempre la primera capa, y su valor es dado por el usuario
- *  - Outputs:      Es siempre la última capa, y su valor es el resultante de los inputs y las funciones realizadas dentro de la caja negra.
- *  - Caja negra:   Una cantidad ilimitada de capas que está entre las de entradas y salidas
+ *  - Outputs:      Es siempre la última capa, y su valor es el resultante de los inputs y las funciones realizadas dentro de la caja negra
+ *  - Caja negra:   Una cantidad ilimitada de capas que está entre las de entradas y salidas.
  * 
  * @author Adrián
  */
