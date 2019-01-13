@@ -13,6 +13,7 @@ package redNeuronal;
  */
 public class Capa {
 
+    private int capaID;
     private Neurona[] neuronas;
     
     /***
@@ -20,11 +21,12 @@ public class Capa {
      * 
      * No se recomienda usarse si no sabe unir los enlaces correctamente.
      */
-    public Capa (int l) {
+    public Capa (int id, int l) {
         neuronas = new Neurona[l];
+        capaID = id;
 
         for (int j = 0; j < l; j++) {
-            neuronas[j] = new Neurona();
+            neuronas[j] = new Neurona(capaID, j);
         }
     }
 
@@ -35,11 +37,12 @@ public class Capa {
      * @param capaAnterior capa anterior a este
      *
      */
-    public Capa(int tam, Capa capaAnterior) {
+    public Capa(int id, int tam, Capa capaAnterior) {
         neuronas = new Neurona[tam];
+        capaID = id;
 
         for (int j = 0; j < tam; j++) {
-            neuronas[j] = new Neurona(capaAnterior.neuronas);
+            neuronas[j] = new Neurona(capaID, j, capaAnterior.neuronas);
         }
     }
 
@@ -53,5 +56,11 @@ public class Capa {
      
     protected Neurona[] getNeuronas() {
         return neuronas;
+    }
+    
+    
+    @Override
+    public String toString() {
+        return "[C"+capaID+"]";
     }
 }

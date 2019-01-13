@@ -14,6 +14,12 @@ import java.util.Map;
  * @author Adrián 
  */
 public class Neurona {
+    
+    /**
+     * Manera para llamarlo con el toString()
+     */
+    private int capaID, neuronaID;
+    
     /**
      * Valor actual de la neurona.
      * Es el valor que se le da al input, va pasando por todas las capas y llega hasta el output.
@@ -49,7 +55,10 @@ public class Neurona {
     * No es recomendable utilizar esta neurona directamente en el perceptrón
     * Porque podría dar valores inconcluyentes al no tener ninguna conexión.
     */
-    public Neurona () {
+    public Neurona (int capaID, int neuronaID) {
+        this.capaID=capaID;
+        this.neuronaID=neuronaID;
+        
         iniciarlizarValores();
         setEnlaces();
     }
@@ -57,7 +66,10 @@ public class Neurona {
     /**
      * Crea una neurona con todas las conexiones a otras neuronas
      */
-    public Neurona(Neurona... neuronas) {
+    public Neurona(int capaID, int neuronaID, Neurona... neuronas) {
+        this.capaID=capaID;
+        this.neuronaID=neuronaID;
+        
         iniciarlizarValores();
         setEnlaces(neuronas);
     }
@@ -138,6 +150,10 @@ public class Neurona {
         
         return _enlaces;
     }
+    
+    public HashMap<Neurona, Double> getEnlacesEntrantes () {
+        return this.enlacesEntrantes;
+    }
 
     public int getLengthEnlace() {
         return enlacesEntrantes.size();
@@ -213,6 +229,19 @@ public class Neurona {
 
     public void setDelta(double valor) {
         delta = valor;
+    }
+
+    public int getCapaID() {
+        return capaID;
+    }
+
+    public int getNeuronaID() {
+        return neuronaID;
+    }
+    
+    @Override
+    public String toString() {
+        return "[C"+this.capaID+"-N"+this.neuronaID+"]";
     }
 
 }

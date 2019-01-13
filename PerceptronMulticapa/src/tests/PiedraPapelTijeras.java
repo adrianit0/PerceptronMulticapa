@@ -72,7 +72,7 @@ public class PiedraPapelTijeras {
     private final boolean debug = false;
     
     public PiedraPapelTijeras () {
-        this.iteracciones=10000;
+        this.iteracciones=100000;
     }
     
     public PiedraPapelTijeras (int iteracciones) {

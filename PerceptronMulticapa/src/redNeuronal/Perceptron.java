@@ -5,6 +5,7 @@ import funciones.*;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import util.Posicion;
 
@@ -84,9 +85,9 @@ public class Perceptron {
     private void crearCapas(int[] valorCapas, boolean crearEnlaces) {
         for (int i = 0; i < valorCapas.length; i++) {
             if (i != 0 && crearEnlaces) {
-                this.capas.add(new Capa(valorCapas[i], this.capas.get(i - 1)));
+                this.capas.add(new Capa(i, valorCapas[i], this.capas.get(i - 1)));
             } else {
-                this.capas.add(new Capa(valorCapas[i]));
+                this.capas.add(new Capa(i, valorCapas[i]));
             }
         }
     }
@@ -425,6 +426,13 @@ public class Perceptron {
                 continue; // No existe salida
             
             neuronaSaliente = capas.get(p.getKey()).getNeurona(p.getValue());
+            
+            if (neuronaEntrante.getCapaID()<=neuronaSaliente.getCapaID()) {
+                System.out.println("NO SE PUEDE PONER EL ENLACE");
+                continue; // No se suele poner una capa
+            }
+                
+            
             neuronaEntrante.addEnlace(neuronaSaliente);
         }
     }
@@ -445,6 +453,13 @@ public class Perceptron {
         }
     }
     
+    /**
+     *  Comprueba todos los valores de una red neuronal, para observar, mediante texto si todo
+     *  funciona como se desea.
+     * 
+     * TODO: Mirar si no tiene ninguna conexión de entrada y de salida.
+     * 
+     */
     public void comprobarValores () {
         int indexC = 0;
         int indexN = 0;
@@ -457,11 +472,12 @@ public class Perceptron {
                         "\n         Umbral: "+formater.format(n.getUmbral()) + 
                         "\n         Error: "+formater.format(n.getDelta())+": ");
                 
+                System.out.println("         Salientes: " +n.getLengthEnlaceSalientes());
+                System.out.println("         Entrantes: "+ n.getLengthEnlace());
                 if (indexC>0) {
-                    System.out.println("         Enlaces:");
-                    double[] enlaces = n.getEnlaces();
-                    for (double v : enlaces) {
-                        System.out.println("            > "+ formater.format(v));
+                    HashMap<Neurona, Double> enlaces = n.getEnlacesEntrantes();
+                    for (Map.Entry<Neurona, Double> v : enlaces.entrySet()) {
+                        System.out.println("           " +v.getKey() + " > "+ formater.format(v.getValue()));
                     }
                 }
                 
